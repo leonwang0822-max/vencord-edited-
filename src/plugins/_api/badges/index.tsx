@@ -1,20 +1,8 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * Modified Vencord Badge System
+ * Custom badge integration for self-hosted badge servers
+ * Modified by: leonwang0822-max
+ */
 
 import "./fixDiscordBadgePadding.css";
 
@@ -22,24 +10,13 @@ import { _getBadges, BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Bad
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Heart } from "@components/Heart";
-import { openContributorModal } from "@components/settings/tabs";
-import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
-import { shouldShowContributorBadge } from "@utils/misc";
 import { closeModal, ModalContent, ModalHeader, ModalRoot, openModal } from "@utils/modal";
 import definePlugin from "@utils/types";
 import { User } from "@vencord/discord-types";
 import { Forms, Toasts, UserStore } from "@webpack/common";
 
-const CONTRIBUTOR_BADGE = "https://cdn.discordapp.com/emojis/1092089799109775453.png?size=64";
-
-const ContributorBadge: ProfileBadge = {
-    description: "Vencord Contributor",
-    image: CONTRIBUTOR_BADGE,
-    position: BadgePosition.START,
-    shouldShow: ({ userId }) => shouldShowContributorBadge(userId),
-    onClick: (_, { userId }) => openContributorModal(UserStore.getUser(userId))
-};
+// Custom badge system - no contributor badges in this modified version
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 
@@ -57,7 +34,7 @@ let intervalId: any;
 export default definePlugin({
     name: "BadgeAPI",
     description: "API to add badges to users.",
-    authors: [Devs.Megu, Devs.Ven, Devs.TheSun],
+    authors: [{ name: "Modified Badge System", id: 0n }],
     required: true,
     patches: [
         {
@@ -103,7 +80,7 @@ export default definePlugin({
         }
     },
 
-    userProfileBadge: ContributorBadge,
+    // No default profile badges in this modified version
 
     async start() {
         await loadBadges();
@@ -164,28 +141,20 @@ export default definePlugin({
                                         }}
                                     >
                                         <Heart />
-                                        Vencord Donor
+                                        Custom Badge
                                     </Forms.FormTitle>
                                 </Flex>
                             </ModalHeader>
                             <ModalContent>
-                                <Flex>
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533070955872337.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533090627174460.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                </Flex>
-                                <div style={{ padding: "1em" }}>
+                                <div style={{ padding: "1em", textAlign: "center" }}>
                                     <Forms.FormText>
-                                        This is a badge
+                                        This user has a custom badge from the self-hosted badge server.
+                                        <br /><br />
+                                        To set up your own badges, visit:
+                                        <br />
+                                        <a href="https://github.com/leonwang0822-max/badge-system-for-my-vencord" target="_blank" rel="noopener noreferrer">
+                                            Badge System Repository
+                                        </a>
                                     </Forms.FormText>
                                 </div>
                             </ModalContent>

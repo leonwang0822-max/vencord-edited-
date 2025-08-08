@@ -1,10 +1,10 @@
 # Vencord - Modified Edition
 
 ![](https://img.shields.io/github/package-json/v/Vendicated/Vencord?style=for-the-badge&logo=github&logoColor=d3869b&label=&color=1d2021&labelColor=282828)
-[![Custom Badge Server](https://img.shields.io/badge/Custom%20Badge%20Server-Active-brightgreen?style=for-the-badge)](http://38.55.132.84:4000/badges.json)
+[![Custom Badge Server](https://img.shields.io/badge/Custom%20Badge%20Server-Self%20Hosted-brightgreen?style=for-the-badge)](#badge-system-setup)
 [![Enhanced Installer](https://img.shields.io/badge/Enhanced%20Installer-Available-blue?style=for-the-badge)](#enhanced-installer)
 
-A modified version of Vencord with custom badge server integration and an enhanced installer UI.
+A modified version of Vencord with self-hosted badge server integration and an enhanced installer UI.
 
 ![](https://github.com/user-attachments/assets/3fac98c0-c411-4d2a-97a3-13b7da8687a2)
 
@@ -12,10 +12,11 @@ A modified version of Vencord with custom badge server integration and an enhanc
 
 This version includes several enhancements over the original Vencord:
 
-### Custom Badge Server
-- **Custom Badge Endpoint**: Connected to `http://38.55.132.84:4000/badges.json`
+### Self-Hosted Badge Server
+- **Custom Badge Endpoint**: Connect to your own badge server at `localhost:4000/badges.json`
 - **Enhanced Badge System**: Additional badge types and custom styling
-- **Real-time Updates**: Badges are fetched dynamically from the custom server
+- **Real-time Updates**: Badges are fetched dynamically from your custom server
+- **Easy Setup**: Use the provided badge system repository for quick deployment
 
 ### Enhanced Installer UI
 - **Modern Discord Theme**: Beautiful Discord-inspired color palette
@@ -33,6 +34,44 @@ Before installing, make sure you have:
 - **pnpm** package manager - Install with `npm install -g pnpm`
 - **Discord** application (must be closed during installation)
 - **Git** (for building from source)
+
+## 🏷️ Badge System Setup
+
+To set up your own badge server for custom badges:
+
+### Quick Setup
+
+1. **Clone the Badge System Repository**:
+   ```bash
+   git clone https://github.com/leonwang0822-max/badge-system-for-my-vencord.git
+   cd badge-system-for-my-vencord
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure Your Badges**:
+   - Edit `badges.json` to add your custom badges
+   - Follow the format: `{"userId": [{"badge": "badge_url", "tooltip": "Badge Description"}]}`
+
+4. **Start the Badge Server**:
+   ```bash
+   npm start
+   ```
+   The server will run on `http://localhost:4000`
+
+5. **Verify Setup**:
+   - Visit `http://localhost:4000/badges.json` to see your badges
+   - The Vencord modification will automatically connect to this endpoint
+
+### Custom Configuration
+
+- **Port Configuration**: Edit the port in the badge server if needed
+- **Badge Format**: Supports image URLs and custom tooltips
+- **User IDs**: Use Discord user IDs to assign badges to specific users
+- **Real-time Updates**: Changes to `badges.json` are reflected immediately
 
 ## 🔧 Installation Methods
 
@@ -159,7 +198,8 @@ chmod +x VencordInstallerEnhanced
 
 **Badge server connection issues**:
 - Check internet connection
-- Verify badge server is accessible: `curl http://38.55.132.84:4000/badges.json`
+- Ensure your badge server is running: `curl http://localhost:4000/badges.json`
+- Verify the badge server is started (see Badge System Setup section)
 - Restart Discord if badges don't appear
 
 **Enhanced installer build fails**:
@@ -214,9 +254,9 @@ cp app.asar.backup app.asar
 
 ## 📜 Credits
 
-- **Original Vencord**: [Vendicated](https://github.com/Vendicated) and [contributors](https://github.com/Vendicated/Vencord/graphs/contributors)
+- **Based on**: Original Vencord project
 - **Enhanced Installer**: Custom UI improvements and modern styling
-- **Custom Badge Server**: Integration and custom badge system
+- **Self-Hosted Badge System**: Integration and custom badge system
 - **Modified by**: [leonwang0822-max](https://github.com/leonwang0822-max)
 
 ## ⚖️ Disclaimer
@@ -224,18 +264,7 @@ cp app.asar.backup app.asar
 Discord is trademark of Discord Inc. and solely mentioned for the sake of descriptivity.
 Mention of it does not imply any affiliation with or endorsement by Discord Inc.
 
-<details>
-<summary>Using Vencord violates Discord's terms of service</summary>
-
-Client modifications are against Discord's Terms of Service.
-
-However, Discord is pretty indifferent about them and there are no known cases of users getting banned for using client mods! So you should generally be fine as long as you don't use any plugins that implement abusive behaviour. But no worries, all inbuilt plugins are safe to use!
-
-Regardless, if your account is very important to you and it getting disabled would be a disaster for you, you should probably not use any client mods (not exclusive to Vencord), just to be safe.
-
-Additionally, make sure not to post screenshots with Vencord in a server where you might get banned for it.
-
-</details>
+This is a modified version of Vencord. Client modifications may be against Discord's Terms of Service. Use at your own discretion.
 
 ## 🌟 Support
 
