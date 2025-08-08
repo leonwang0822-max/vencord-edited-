@@ -30,7 +30,10 @@ import plugins from "~plugins";
 const logger = new Logger("Settings");
 export interface Settings {
     autoUpdate: boolean;
-    autoUpdateNotification: boolean,
+    autoUpdateNotification: boolean;
+    autoUpdateInterval: number;
+    autoUpdateCheckOnStartup: boolean;
+    autoUpdateSilent: boolean,
     useQuickCss: boolean;
     eagerPatches: boolean;
     enabledThemes: string[];
@@ -80,6 +83,9 @@ export interface Settings {
 const DefaultSettings: Settings = {
     autoUpdate: true,
     autoUpdateNotification: true,
+    autoUpdateInterval: 30, // minutes
+    autoUpdateCheckOnStartup: true,
+    autoUpdateSilent: false,
     useQuickCss: true,
     themeLinks: [],
     eagerPatches: IS_REPORTER,

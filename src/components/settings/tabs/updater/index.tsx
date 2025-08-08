@@ -19,18 +19,19 @@
 import { useSettings } from "@api/Settings";
 import { Link } from "@components/Link";
 import { handleSettingsTabError, SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { autoUpdater } from "@utils/autoUpdater";
 import { Margins } from "@utils/margins";
 import { ModalCloseButton, ModalContent, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { useAwaiter } from "@utils/react";
 import { getRepo, isNewer, UpdateLogger } from "@utils/updater";
-import { Forms, React, Switch } from "@webpack/common";
+import { Button, Forms, React, Switch, TextInput } from "@webpack/common";
 
 import gitHash from "~git-hash";
 
 import { CommonProps, HashLink, Newer, Updatable } from "./Components";
 
 function Updater() {
-    const settings = useSettings(["autoUpdate", "autoUpdateNotification"]);
+    const settings = useSettings(["autoUpdate", "autoUpdateNotification", "autoUpdateInterval", "autoUpdateCheckOnStartup", "autoUpdateSilent"]);
 
     const [repo, err, repoPending] = useAwaiter(getRepo, {
         fallbackValue: "Loading...",
@@ -48,11 +49,15 @@ function Updater() {
 
             <Switch
                 value={settings.autoUpdate}
-                onChange={(v: boolean) => settings.autoUpdate = v}
-                note="Automatically update Vencord without confirmation prompt"
+                onChange={(v: boolean) => {
+                    settings.autoUpdate = v;
+                    autoUpdater.updateSettings();
+                }}
+                note="Automatically download and install updates without confirmation"
             >
                 Automatically update
             </Switch>
+
             <Switch
                 value={settings.autoUpdateNotification}
                 onChange={(v: boolean) => settings.autoUpdateNotification = v}
@@ -61,6 +66,53 @@ function Updater() {
             >
                 Get notified when an automatic update completes
             </Switch>
+
+            <Switch
+                value={settings.autoUpdateCheckOnStartup}
+                onChange={(v: boolean) => {
+                    settings.autoUpdateCheckOnStartup = v;
+                    autoUpdater.updateSettings();
+                }}
+                note="Check for updates when Discord starts"
+            >
+                Check for updates on startup
+            </Switch>
+
+            <Switch
+                value={settings.autoUpdateSilent}
+                onChange={(v: boolean) => settings.autoUpdateSilent = v}
+                note="Automatically restart Discord after updates (no user interaction required)"
+                disabled={!settings.autoUpdate}
+            >
+                Silent updates (auto-restart)
+            </Switch>
+
+            <Forms.FormTitle tag="h5" className={Margins.top16}>Update Check Interval</Forms.FormTitle>
+            <Forms.FormText className={Margins.bottom8}>
+                How often to check for updates (in minutes)
+            </Forms.FormText>
+            <TextInput
+                type="number"
+                value={settings.autoUpdateInterval}
+                onChange={(v: string) => {
+                    const interval = parseInt(v);
+                    if (interval >= 5 && interval <= 1440) { // 5 minutes to 24 hours
+                        settings.autoUpdateInterval = interval;
+                        autoUpdater.updateSettings();
+                    }
+                }}
+                placeholder="30"
+                disabled={!settings.autoUpdate && !settings.autoUpdateCheckOnStartup}
+            />
+
+            <div className={Margins.top16}>
+                <Button
+                    onClick={() => autoUpdater.forceCheck()}
+                    size={Button.Sizes.SMALL}
+                >
+                    Check for Updates Now
+                </Button>
+            </div>
 
             <Forms.FormTitle tag="h5">Repo</Forms.FormTitle>
 

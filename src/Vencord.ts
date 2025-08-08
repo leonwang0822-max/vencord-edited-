@@ -32,18 +32,17 @@ export { PlainSettings, Settings };
 import "./utils/quickCss";
 import "./webpack/patchWebpack";
 
-import { openUpdaterModal } from "@components/settings/tabs/updater";
 import { IS_WINDOWS } from "@utils/constants";
 import { StartAt } from "@utils/types";
 
 import { get as dsGet } from "./api/DataStore";
-import { NotificationData, showNotification } from "./api/Notifications";
+import { showNotification } from "./api/Notifications";
 import { PlainSettings, Settings } from "./api/Settings";
 import { patches, PMLogger, startAllPlugins } from "./plugins";
+import { autoUpdater } from "./utils/autoUpdater";
 import { localStorage } from "./utils/localStorage";
 import { relaunch } from "./utils/native";
 import { getCloudSettings, putCloudSettings } from "./utils/settingsSync";
-import { checkForUpdates, update, UpdateLogger } from "./utils/updater";
 import { onceReady } from "./webpack";
 import { SettingsRouter } from "./webpack/common";
 
@@ -90,44 +89,10 @@ async function syncSettings() {
     }
 }
 
-let notifiedForUpdatesThisSession = false;
-
+// Legacy update check function - now handled by AutoUpdaterService
+// Kept for backward compatibility
 async function runUpdateCheck() {
-    const notify = (data: NotificationData) => {
-        if (notifiedForUpdatesThisSession) return;
-        notifiedForUpdatesThisSession = true;
-
-        setTimeout(() => showNotification({
-            permanent: true,
-            noPersist: true,
-            ...data
-        }), 10_000);
-    };
-
-    try {
-        const isOutdated = await checkForUpdates();
-        if (!isOutdated) return;
-
-        if (Settings.autoUpdate) {
-            await update();
-            if (Settings.autoUpdateNotification) {
-                notify({
-                    title: "Vencord has been updated!",
-                    body: "Click here to restart",
-                    onClick: relaunch
-                });
-            }
-            return;
-        }
-
-        notify({
-            title: "A Vencord update is available!",
-            body: "Click here to view the update",
-            onClick: openUpdaterModal!
-        });
-    } catch (err) {
-        UpdateLogger.error("Failed to check for updates", err);
-    }
+    return autoUpdater.performUpdateCheck();
 }
 
 async function init() {
@@ -137,12 +102,8 @@ async function init() {
     syncSettings();
 
     if (!IS_WEB && !IS_UPDATER_DISABLED) {
-        runUpdateCheck();
-
-        // this tends to get really annoying, so only do this if the user has auto-update without notification enabled
-        if (Settings.autoUpdate && !Settings.autoUpdateNotification) {
-            setInterval(runUpdateCheck, 1000 * 60 * 30); // 30 minutes
-        }
+        // Auto-updater service handles all update checking and notifications
+        // No need for manual interval setup as it's handled by the service
     }
 
     if (IS_DEV) {
