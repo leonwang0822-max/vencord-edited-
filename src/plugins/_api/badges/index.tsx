@@ -57,53 +57,7 @@ const DonorBadge: ProfileBadge = {
                     transform: "scale(0.9)" // The image is a bit too big compared to default badges
                 }
             },
-            onClick() {
-                const modalKey = openModal(props => (
-                    <ErrorBoundary noop onError={() => {
-                        closeModal(modalKey);
-                        VencordNative.native.openExternal("https://github.com/leonwang0822-max");
-                    }}>
-                        <ModalRoot {...props}>
-                            <ModalHeader>
-                                <Flex style={{ width: "100%", justifyContent: "center" }}>
-                                    <Forms.FormTitle
-                                        tag="h2"
-                                        style={{
-                                            width: "100%",
-                                            textAlign: "center",
-                                            margin: 0
-                                        }}
-                                    >
-                                        <Heart />
-                                        Vencord Donor
-                                    </Forms.FormTitle>
-                                </Flex>
-                            </ModalHeader>
-                            <ModalContent>
-                                <Flex>
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533070955872337.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533090627174460.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                </Flex>
-                                <div style={{ padding: "1em" }}>
-                                    <Forms.FormText>
-                                        This is a badge
-                                    </Forms.FormText>
-                                </div>
-                            </ModalContent>
-                        </ModalRoot>
-                    </ErrorBoundary>
-                ));
-            },
+
         })) || [];
     }
 };
@@ -115,7 +69,7 @@ async function loadBadges(noCache = false) {
     if (noCache)
         init.cache = "no-cache";
 
-    DonorBadges = await fetch("http://38.55.132.84:4000/badges.json", init)
+    DonorBadges = await fetch("http://localhost:4000/badges.json", init)
         .then(r => r.json());
 }
 
