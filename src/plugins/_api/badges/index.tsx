@@ -34,7 +34,7 @@ import { Forms, Toasts, UserStore } from "@webpack/common";
 const CONTRIBUTOR_BADGE = "https://cdn.discordapp.com/emojis/1092089799109775453.png?size=64";
 
 const ContributorBadge: ProfileBadge = {
-    description: "Vencord Contributor",
+    description: "badge",
     image: CONTRIBUTOR_BADGE,
     position: BadgePosition.START,
     shouldShow: ({ userId }) => shouldShowContributorBadge(userId),
@@ -164,25 +164,11 @@ export default definePlugin({
                                         }}
                                     >
                                         <Heart />
-                                        Vencord Donor
+                                        badge
                                     </Forms.FormTitle>
                                 </Flex>
                             </ModalHeader>
                             <ModalContent>
-                                <Flex>
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533070955872337.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                    <img
-                                        role="presentation"
-                                        src="https://cdn.discordapp.com/emojis/1026533090627174460.png"
-                                        alt=""
-                                        style={{ margin: "auto" }}
-                                    />
-                                </Flex>
                                 <div style={{ padding: "1em" }}>
                                     <Forms.FormText>
                                         This is a badge
