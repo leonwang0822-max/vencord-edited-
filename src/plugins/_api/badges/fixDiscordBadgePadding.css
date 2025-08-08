@@ -3,3 +3,14 @@
     /* Discord has padding set to 2px instead of 1px, which causes the 12th badge to wrap to a new line. */
     padding: 0 1px;
 }
+
+/* Remove extra spacing when there's only one badge */
+[class*="biteSize_"] [class*="tags_"] [class*="container_"]:only-child {
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure single badges don't have extra spacing */
+[class*="biteSize_"] [class*="tags_"] [class*="container_"] > *:only-child {
+    margin: 0;
+}
