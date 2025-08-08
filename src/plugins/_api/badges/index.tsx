@@ -18,7 +18,7 @@
 
 import "./fixDiscordBadgePadding.css";
 
-import { _getBadges, addProfileBadge, BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
+import { _getBadges, BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Heart } from "@components/Heart";
@@ -39,27 +39,6 @@ const ContributorBadge: ProfileBadge = {
     position: BadgePosition.START,
     shouldShow: ({ userId }) => shouldShowContributorBadge(userId),
     onClick: (_, { userId }) => openContributorModal(UserStore.getUser(userId))
-};
-
-const DonorBadge: ProfileBadge = {
-    description: "Badge",
-    image: "", // Will be overridden by individual donor badges
-    position: BadgePosition.START,
-    shouldShow: ({ userId }) => !!DonorBadges[userId]?.length,
-    getBadges: ({ userId }) => {
-        return DonorBadges[userId]?.map(badge => ({
-            image: badge.badge,
-            description: badge.tooltip,
-            position: BadgePosition.START,
-            props: {
-                style: {
-                    borderRadius: "50%",
-                    transform: "scale(0.9)" // The image is a bit too big compared to default badges
-                }
-            },
-
-        })) || [];
-    }
 };
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
@@ -128,7 +107,6 @@ export default definePlugin({
 
     async start() {
         await loadBadges();
-        addProfileBadge(DonorBadge);
 
         clearInterval(intervalId);
         intervalId = setInterval(loadBadges, 1000 * 60 * 30); // 30 minutes
@@ -158,6 +136,63 @@ export default definePlugin({
 
 
     getDonorBadges(userId: string) {
-        return DonorBadges[userId] || [];
+        return DonorBadges[userId]?.map(badge => ({
+            image: badge.badge,
+            description: badge.tooltip,
+            position: BadgePosition.START,
+            props: {
+                style: {
+                    borderRadius: "50%",
+                    transform: "scale(0.9)" // The image is a bit too big compared to default badges
+                }
+            },
+            onClick() {
+                const modalKey = openModal(props => (
+                    <ErrorBoundary noop onError={() => {
+                        closeModal(modalKey);
+                        VencordNative.native.openExternal("https://github.com/leonwang0822-max");
+                    }}>
+                        <ModalRoot {...props}>
+                            <ModalHeader>
+                                <Flex style={{ width: "100%", justifyContent: "center" }}>
+                                    <Forms.FormTitle
+                                        tag="h2"
+                                        style={{
+                                            width: "100%",
+                                            textAlign: "center",
+                                            margin: 0
+                                        }}
+                                    >
+                                        <Heart />
+                                        Vencord Donor
+                                    </Forms.FormTitle>
+                                </Flex>
+                            </ModalHeader>
+                            <ModalContent>
+                                <Flex>
+                                    <img
+                                        role="presentation"
+                                        src="https://cdn.discordapp.com/emojis/1026533070955872337.png"
+                                        alt=""
+                                        style={{ margin: "auto" }}
+                                    />
+                                    <img
+                                        role="presentation"
+                                        src="https://cdn.discordapp.com/emojis/1026533090627174460.png"
+                                        alt=""
+                                        style={{ margin: "auto" }}
+                                    />
+                                </Flex>
+                                <div style={{ padding: "1em" }}>
+                                    <Forms.FormText>
+                                        This is a badge
+                                    </Forms.FormText>
+                                </div>
+                            </ModalContent>
+                        </ModalRoot>
+                    </ErrorBoundary>
+                ));
+            },
+        }));
     }
 });

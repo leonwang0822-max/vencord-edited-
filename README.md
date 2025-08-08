@@ -94,7 +94,7 @@ Before installing, make sure you have:
    ```bash
    # Backup original (recommended)
    cp app.asar app.asar.backup
-   
+
    # Copy built Vencord
    cp /path/to/vencord-edited-/dist/app.asar ./app.asar
    ```
